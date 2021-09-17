@@ -1,0 +1,32 @@
+<form novalidate autocomplete="off" #form="ngForm" (submit)="onSubmit(form)">
+    <input type="hidden" name="Id" [value]="service.formData.Id" />
+    <div class="form-group">
+        <label>Title</label>
+        <input class="form-control form-control-lg" placeholder="Title" name="Title"
+            #Title="ngModel" [(ngModel)]="service.formData.Title"
+            required [class.invalid]="Title.invalid && Title.touched">
+    </div>
+    <div class="form-group">
+        <label>Year</label>
+        <input class="form-control form-control-lg" placeholder="4 Digit Card Number" name="Year"
+            #Year="ngModel" [(ngModel)]="service.formData.Year"
+            required maxlength="4" minlength="4" [class.invalid]="Year.invalid && Year.touched">
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Description</label>
+            <input type="password" class="form-control form-control-lg" placeholder="Security Code" name="Description"
+                #Description="ngModel" [(ngModel)]="service.formData.Description"
+                required maxlength="3" minlength="3" [class.invalid]="Description.invalid && Description.touched">
+        </div>
+        <!-- <div class="form-group col-md-6">
+            <label>VALIDE THROUGH</label>
+            <input class="form-control form-control-lg" placeholder="MM/YY" name="expirationDate"
+                #expirationDate="ngModel" [(ngModel)]="service.formData.expirationDate"
+                required maxlength="5" minlength="5" [class.invalid]="expirationDate.invalid && expirationDate.touched">
+        </div> -->
+    </div>
+    <div class="form-group">
+        <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">SUBMIT</button>
+    </div>
+</form>
