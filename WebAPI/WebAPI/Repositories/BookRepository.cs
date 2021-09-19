@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Models;
+using WebAPI.Entities;
 
 namespace WebAPI.Repositories
 {
@@ -14,7 +15,7 @@ namespace WebAPI.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Book>> GetBookAsync()
+        public async Task<IEnumerable<Book>> GetBooksAsync()
         {
             return await _context.Books.ToListAsync();
         }

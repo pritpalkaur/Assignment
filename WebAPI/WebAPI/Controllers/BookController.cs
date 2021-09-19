@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPI.Entities;
 using WebAPI.Models;
 using WebAPI.Repositories;
 
@@ -17,48 +19,32 @@ namespace WebAPI.Controllers
     {
         private readonly AuthenticationContext _context;
         private readonly IBookRepository repository;
-        public BookController(AuthenticationContext context, IBookRepository repository)
+        private readonly ILogger<BookController> logger;
+        public BookController( IBookRepository repository, ILogger<BookController> logger)
         {
             this.repository = repository;
-            _context = context;
+            this.logger = logger;
         }
 
         // GET: api/Book
         [HttpGet]
-        public async Task<IEnumerable<Book>> GetBooks()
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IEnumerable<Book>> GetBooks(string title = null)
         {
-            var Book = await repository.GetBookAsync();
+            var Book = await repository.GetBooksAsync();
+
+            var books = (await repository.GetBooksAsync())
+             .Select(item => item.AsDto());
+
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                books = books.Where(book => book.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+            }
+
+            logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved {books.Count()} books");
+
             return Book;
-        }
-
-
-        // PUT: api/Book/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook(int id, Book Book)
-        {
-            if (id != Book.Id)
-            {
-                return BadRequest();
-            }
-            _context.Entry(Book).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         // GET: api/Book/5
@@ -93,25 +79,5 @@ namespace WebAPI.Controllers
             return CreatedAtAction("GetBook", new { id = Book.Id }, Book);
         }
 
-        // DELETE: api/Book/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Book>> DeleteBook(int id)
-        {
-            var Book = await _context.Books.FindAsync(id);
-            if (Book == null)
-            {
-                return NotFound();
-            }
-
-            _context.Books.Remove(Book);
-            await _context.SaveChangesAsync();
-
-            return Book;
-        }
-
-        private bool BookExists(int id)
-        {
-            return _context.Books.Any(e => e.Id == id);
-        }
     }
 }
