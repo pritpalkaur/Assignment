@@ -17,6 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebAPI.Models;
 using WebAPI.Repositories;
+using Microsoft.AspNetCore.HttpsPolicy;
+
 
 namespace WebAPI
 {
@@ -102,7 +104,7 @@ namespace WebAPI
             builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString())
             .AllowAnyHeader()
             .AllowAnyMethod()
-            
+
             );
 
             app.UseAuthentication();

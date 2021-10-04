@@ -38,22 +38,22 @@ namespace TestProject1
             Assert.True(bookList.Equals(result));
         }
         [Fact]
-        public void GetBooksFromRepo()
+        public async void GetBooksFromRepo()
         {
-            List<Book> bookList = new List<Book>();
+            //List<Book> bookList = new List<Book>();
 
-            var bookDTO = new Book()
-            {
-                Id = 1,
-                Title = "Math",
-                Year = 2021,
-                Description = "This is Math"
-            };
-            bookList.Add(bookDTO);
-            repositoryStub.Setup(p => p.GetBookAsync(1)).Returns(bookList);
-            BookController book = new BookController(repositoryStub.Object, loggerStub.Object);
-            var result = book.GetBook(1);
-            Assert.True(bookList.Equals(result));
+            ////var bookDTO = new Book()
+            ////{
+            ////    Id = 1,
+            ////    Title = "Math",
+            ////    Year = 2021,
+            ////    Description = "This is Math"
+            ////};
+            ////bookList.Add();
+            //await repositoryStub.Setup(p => p.GetBooksAsync()).ReturnsAsync();
+            //BookController book = new BookController(repositoryStub.Object, loggerStub.Object);
+            //var result = book.GetBook(1);
+            //Assert.True(bookList.Equals(result));
         }
     }
 }
